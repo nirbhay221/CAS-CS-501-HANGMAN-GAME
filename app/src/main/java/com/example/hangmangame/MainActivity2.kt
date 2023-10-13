@@ -6,59 +6,16 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import kotlin.random.Random
 import kotlin.text.StringBuilder
 
 class MainActivity2 : AppCompatActivity() {
-    private val maxTries = 10
-    private var currentTries = 0
+
+    private val viewModel by viewModels<viewModelState>()
+    private val maxTries = 3
     private lateinit var blankWords:String
-    private lateinit var wordToGuess: String
-    private var lettersUsed: String = ""
-    private var usedLetter = mutableListOf<Char>()
 
-    private var revealedLetter = mutableListOf<Char>()
-
-
-    private val wordCategoriesMap = mapOf(
-        "apple" to "Fruit",
-        "banana" to "Fruit",
-        "cherry" to "Fruit",
-        "date" to "Fruit",
-        "elderberry" to "Fruit",
-        "blueberry" to "Fruit",
-        "pineapple" to "Fruit",
-        "watermelon" to "Fruit",
-        "raspberry" to "Fruit",
-        "elephant" to "Animal",
-        "lion" to "Animal",
-        "penguin" to "Animal",
-        "dolphin" to "Animal",
-        "india" to "Country",
-        "australia" to "Country",
-        "canada" to "Country",
-        "japan" to "Country",
-        "brazil" to "Country",
-        "germany" to "Country",
-        "baseball" to "Sports",
-        "tennis" to "Sports",
-        "swimming" to "Sports",
-        "soccer" to "Sports",
-        "volleyball" to "Sports",
-        "mercury" to "Planets",
-        "venus" to "Planets",
-        "earth" to "Planets",
-        "mars" to "Planets",
-        "jupiter" to "Planets",
-        "neptune" to "Planets",
-        "saturn" to "Planets",
-        "uranus" to "Planets",
-        "engineer" to "Profession",
-        "musician" to "Profession",
-        "astronaut" to "Profession",
-        "doctor" to "Profession",
-        "chef" to "Profession"
-    )
     private lateinit var keyA: Button
     private lateinit var keyB: Button
     private lateinit var keyC: Button
@@ -90,6 +47,8 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var startGame : Button
     private var hintButton : Button ?= null
     private var hintResult : TextView ?= null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
@@ -131,11 +90,34 @@ class MainActivity2 : AppCompatActivity() {
         hintButton = findViewById(R.id.hintButton)
         hintResult  = findViewById(R.id.hintResult)
 
-        startGame.setOnClickListener{
-            startNewGame()
+//        Toast.makeText(this,"${viewModel.wordsUsed}",Toast.LENGTH_LONG).show()
+//
+//        Toast.makeText(this,"${viewModel.underscoreWords}",Toast.LENGTH_LONG).show()
+
+        underscoreWords.text = viewModel.underscoreWords
+
+        wordsUsed.text = viewModel.wordsUsed
+        if(viewModel.ButtonVisibility){
+            enableButtons()
+        }else{
+            disableButtons()
         }
-        startNewGame()
         checkLetter()
+        startGame.setOnClickListener{
+            viewModel.startNewGame()
+            viewModel.ButtonVisibility = true
+            if(viewModel.ButtonVisibility){
+                enableButtons()
+            }
+            viewModel.generateBlankSets(viewModel.wordToGuess)
+
+            underscoreWords.text = viewModel.underscoreWords
+
+            viewModel.generateLettersUsed(viewModel.usedLetter)
+
+            wordsUsed.text = viewModel.wordsUsed
+            checkLetter()
+        }
 
 
     }
@@ -145,10 +127,10 @@ class MainActivity2 : AppCompatActivity() {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setContentView(R.layout.activity_main2_landscape)
 
-            Toast.makeText(this,"changed to landscape", Toast.LENGTH_LONG)
+//            Toast.makeText(this,"changed to landscape", Toast.LENGTH_LONG)
         } else {
             setContentView(R.layout.activity_main2)
-            Toast.makeText(this,"changed to portrait", Toast.LENGTH_LONG)
+//            Toast.makeText(this,"changed to portrait", Toast.LENGTH_LONG)
         }}
     private fun checkLetter(){
         keyA.setOnClickListener{
@@ -231,116 +213,82 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
     private fun addLetter(letter:Char){
-        usedLetter.add(letter)
-        generateLettersUsed(usedLetter)
+        viewModel.usedLetter.add(letter)
+
+//        Toast.makeText(this,"Size: ${viewModel.usedLetter.size}",Toast.LENGTH_LONG).show()
+        viewModel.generateLettersUsed(viewModel.usedLetter)
+
+//        Toast.makeText(this,"${viewModel.wordsUsed}",Toast.LENGTH_LONG).show()
+
+        wordsUsed.text = viewModel.wordsUsed
         var letterFound = false
-        for(i in wordToGuess.indices){
-            if(wordToGuess[i].equals(letter, ignoreCase =true) && !revealedLetter.contains(wordToGuess[i])){
-                revealedLetter.add(wordToGuess[i])
+
+        for(i in viewModel.wordToGuess.indices){
+            if(viewModel.wordToGuess[i].equals(letter, ignoreCase =true) && !viewModel.revealedLetter.contains(viewModel.wordToGuess[i])){
+                viewModel.revealedLetter.add(viewModel.wordToGuess[i])
                 letterFound = true
-                Toast.makeText(this,"FOUND !!!", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this,"Guess word : ${viewModel.wordToGuess} , ${viewModel.wordToGuess[i]} FOUND !!!", Toast.LENGTH_LONG).show()
             }
 
         }
         if (letterFound) {
-            val updatedWord = StringBuilder()
+            viewModel.modifyUnderscoreWord()
 
-            for (i in wordToGuess.indices) {
-                if (revealedLetter.contains(wordToGuess[i])) {
-                    updatedWord.append(wordToGuess[i])
-                } else {
-                    updatedWord.append('_')
+//            Toast.makeText(this,"${viewModel.underscoreWords}",Toast.LENGTH_LONG).show()
+            underscoreWords.text = viewModel.underscoreWords
+            viewModel.winOrLos()
+
+//            Toast.makeText(this,"${viewModel.winningCondition}",Toast.LENGTH_LONG)
+            if(viewModel.usedLetter.size == viewModel.wordToGuess.length){
+
+                if(viewModel.winningCondition){
+                    Toast.makeText(this,"Won the game",Toast.LENGTH_LONG).show()
+                    viewModel.ButtonVisibility = false
+                    if(!viewModel.ButtonVisibility){
+                        disableButtons()
+                    }
+                }else{
+
+                    Toast.makeText(this,"Lost the game",Toast.LENGTH_LONG).show()
+                    viewModel.ButtonVisibility = false
+                    if(!viewModel.ButtonVisibility){
+                        disableButtons()
+                    }
                 }
+            }
+            else if(!viewModel.underscoreWords.contains('_')){
+                if(viewModel.winningCondition){
+                    Toast.makeText(this,"You won the game. You can play again.",Toast.LENGTH_LONG).show()
+                    viewModel.ButtonVisibility = false
+                    if(!viewModel.ButtonVisibility){
+                        disableButtons()
+                    }
+                }else{
 
-                if (i < wordToGuess.length - 1) {
-                    updatedWord.append(' ')
+                    Toast.makeText(this,"You lost the game. Please try again",Toast.LENGTH_LONG).show()
+                    viewModel.ButtonVisibility = false
+                    if(!viewModel.ButtonVisibility){
+                        disableButtons()
+                    }
                 }
             }
-
-            underscoreWords.text = updatedWord.toString()
         }
-
-
-
-        if(usedLetter.size == wordToGuess.length){
-            checkGameConditions()
-        }
-        else if (!underscoreWords.text.contains('_')) {
-            checkGameConditions()
-        }
-
-
-
-    }
-    private fun startNewGame(){
-        lettersUsed = ""
-        currentTries = 0
-        usedLetter.clear()
-        revealedLetter.clear()
-        enableButtons()
-        val randomIndex = Random.nextInt(0,wordCategoriesMap.size)
-        val valueList = wordCategoriesMap.keys.toList()
-        wordToGuess = valueList[randomIndex]
-        generateBlankSets(wordToGuess)
-        generateLettersUsed(usedLetter)
-
-     }
-    private fun generateLettersUsed(usedLetter:List<Char>){
-        val lettersUsedString = usedLetter.joinToString(", ")
-        if(lettersUsedString.isEmpty()){
-            wordsUsed.text = "No Letters used yet."
-        }
-        else{
-            wordsUsed.text = "Letters used : {$lettersUsedString}"
-        }
-    }
-    private fun generateBlankSets(word: String):String{
-        val blankRepresentation = StringBuilder()
-        val presentationString = StringBuilder()
-        for(char in word){
-            if(char.isLetterOrDigit()){
-                blankRepresentation.append("_")
-            }
-            else if(char == '/'){
-                blankRepresentation.append('/')
-            }
-            else{
-                blankRepresentation.append(char)
+        else
+        {
+            Toast.makeText(this,"Current Tries :${viewModel.currentTries}",Toast.LENGTH_LONG).show()
+            viewModel.currentTries++
+            if(viewModel.currentTries > maxTries){
+                Toast.makeText(this,"You lost the game. Please try again",Toast.LENGTH_LONG).show()
+                viewModel.ButtonVisibility = false
+                if(!viewModel.ButtonVisibility){
+                    disableButtons()
+                }
             }
         }
-        for(char in blankRepresentation.toString()){
-            presentationString.append(char)
-            presentationString.append(' ')
-        }
-
-        underscoreWords.text = presentationString
-        return blankRepresentation.toString()
-    }
-
-    private fun checkGameConditions(){
-        Toast.makeText(this,"Underscore String : ${underscoreWords.text}, Word To Guess : ${wordToGuess}",Toast.LENGTH_LONG).show()
-
-        var underscoreTextString = underscoreWords.text.toString()
-
-        var cleanedUnderscoreText = underscoreTextString.replace(" ", "").replace(",", "")
-
-
-        if(cleanedUnderscoreText== wordToGuess){
-            Toast.makeText(this,"You Won !! Want to Play Again ? Press on the Start new game Button",Toast.LENGTH_LONG).show()
-        }
-        else {
-            Toast.makeText(this,"You Lost :( I think you can try again to win it. Press on the Start new game Button",Toast.LENGTH_LONG).show()
-
-        }
-        disableButtons()
-
-//        if(currentTries > maxTries){
-//
-//            Toast.makeText(this,"You Lost :( I think you can try again to win it. Press on the Start new game Button",Toast.LENGTH_LONG).show()
-//        }
 
 
     }
+
     private fun enableButtons(){
         keyA.isEnabled = true
         keyB.isEnabled = true
