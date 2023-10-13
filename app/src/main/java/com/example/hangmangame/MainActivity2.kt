@@ -89,6 +89,10 @@ class MainActivity2 : AppCompatActivity() {
         wordsUsed = findViewById(R.id.wordsUsed)
         hintButton = findViewById(R.id.hintButton)
         hintResult  = findViewById(R.id.hintResult)
+        if(viewModel.hintTries == 1||viewModel.hintTries == 2||viewModel.hintTries == 3){
+
+            hintResult?.text = viewModel.wordCategoriesMap[viewModel.wordToGuess]
+        }
 
 //        Toast.makeText(this,"${viewModel.wordsUsed}",Toast.LENGTH_LONG).show()
 //
@@ -117,13 +121,15 @@ class MainActivity2 : AppCompatActivity() {
                 viewModel.Turns--
             }
             else if (viewModel.hintTries == 1){
+                disableHalfRemainingLetters()
 
                 viewModel.hintTries++
 
                 viewModel.Turns--
             }
             else if(viewModel.hintTries == 2){
-
+                highlightAndDisableVowelsInWord()
+                disablevowelsAfterCheck()
                 viewModel.hintTries++
 
                 viewModel.Turns--
@@ -160,9 +166,53 @@ class MainActivity2 : AppCompatActivity() {
             setContentView(R.layout.activity_main2)
 //            Toast.makeText(this,"changed to portrait", Toast.LENGTH_LONG)
         }}
+
+    private fun highlightAndDisableVowelsInWord(){
+        val vowels = listOf('a','e','i','o','u')
+        val remainingLetters = getRemainingLetters()
+        for(vowel in vowels){
+            if(remainingLetters.contains(vowel)){
+                if(viewModel.wordToGuess.contains(vowel)){
+                    Toast.makeText(this,"${vowel}",Toast.LENGTH_LONG).show()
+                }
+
+            }
+        }
+
+
+    }
+    private fun disablevowelsAfterCheck(){
+        val wordToGuess = viewModel.wordToGuess
+        val vowels = listOf('a', 'e', 'i', 'o', 'u')
+        var examine = false;
+        val remainingLetters = getRemainingLetters()
+        val remainingVowels = vowels.filter { remainingLetters.contains(it) }
+
+        Toast.makeText(this,"Remaining Vowels:${remainingVowels}",Toast.LENGTH_LONG).show()
+        var foundVowelInWordToGuess = false
+
+        for (char in wordToGuess) {
+            if (remainingVowels.contains(char)) {
+                foundVowelInWordToGuess = true
+                break
+            }
+        }
+        Toast.makeText(this,"FoundVowel:${foundVowelInWordToGuess}",Toast.LENGTH_LONG).show()
+
+        if (!foundVowelInWordToGuess) {
+            for (letter in remainingVowels) {
+                viewModel.disableWords += letter
+                checkDisableLetters(letter)
+            }
+        }
+    }
     private fun checkLetter(){
         keyA.setOnClickListener{
+
             addLetter('a')
+
+            disablevowelsAfterCheck()
+
         }
         keyB.setOnClickListener{
             addLetter('b')
@@ -174,7 +224,10 @@ class MainActivity2 : AppCompatActivity() {
             addLetter('d')
         }
         keyE.setOnClickListener{
+
             addLetter('e')
+
+            disablevowelsAfterCheck()
         }
         keyF.setOnClickListener{
             addLetter('f')
@@ -186,7 +239,10 @@ class MainActivity2 : AppCompatActivity() {
             addLetter('h')
         }
         keyI.setOnClickListener{
+
             addLetter('i')
+
+            disablevowelsAfterCheck()
         }
         keyJ.setOnClickListener{
             addLetter('j')
@@ -204,7 +260,11 @@ class MainActivity2 : AppCompatActivity() {
             addLetter('n')
         }
         keyO.setOnClickListener{
+
             addLetter('o')
+
+            disablevowelsAfterCheck()
+
         }
         keyP.setOnClickListener{
             addLetter('p')
@@ -222,7 +282,10 @@ class MainActivity2 : AppCompatActivity() {
             addLetter('t')
         }
         keyU.setOnClickListener{
+
             addLetter('u')
+
+            disablevowelsAfterCheck()
         }
         keyV.setOnClickListener{
             addLetter('v')
@@ -239,6 +302,32 @@ class MainActivity2 : AppCompatActivity() {
         keyZ.setOnClickListener{
             addLetter('z')
         }
+
+    }
+    private fun disableHalfRemainingLetters(){
+        val remainingLetters = getRemainingLetters()
+        val remainingLettersToDisable = remainingLetters.filter { letter ->
+            !viewModel.wordToGuess.contains(letter, ignoreCase = true)
+        }
+
+        val disableLetterCount = remainingLettersToDisable.size / 2
+
+        for (i in 0 until disableLetterCount) {
+            val letter = remainingLettersToDisable[i]
+            viewModel.disableWords += letter
+            checkDisableLetters(letter)
+        }
+
+    }
+    private fun getRemainingLetters():List<Char>{
+        val allLetters = "abcdefghijklmnopqrstuvwxyz"
+        val remainingLetters = mutableListOf<Char>()
+        for(letter in allLetters){
+            if(!viewModel.disableWords.contains(letter)){
+                remainingLetters.add(letter)
+            }
+        }
+        return remainingLetters
     }
     private fun addLetter(letter:Char){
         viewModel.usedLetter.add(letter)
@@ -327,6 +416,7 @@ class MainActivity2 : AppCompatActivity() {
 
 
     }
+
     private fun checkDisableLetters(letter:Char){
         when (letter.toLowerCase()) {
             'a' -> keyA.isEnabled = false

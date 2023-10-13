@@ -147,6 +147,7 @@ class viewModelState (private val savedStateHandle: SavedStateHandle):ViewModel(
         wordToGuess = valueList[randomIndex]
         generateBlankSets(wordToGuess)
         generateLettersUsed(usedLetter)
+        disableWords = ""
         currentTries = 0
         Turns = wordToGuess.length
     }
