@@ -103,12 +103,40 @@ class MainActivity2 : AppCompatActivity() {
             disableButtons()
         }
         checkLetter()
+        Toast.makeText(this,"Recreation",Toast.LENGTH_LONG).show()
+        for(element in viewModel.disableWords){
+            checkDisableLetters(element)
+        }
+        hintButton?.setOnClickListener {
+            Toast.makeText(this,"Entering Hint ",Toast.LENGTH_LONG).show()
+
+            if(viewModel.hintTries == 0){
+
+                hintResult?.text = viewModel.wordCategoriesMap[viewModel.wordToGuess]
+                viewModel.hintTries++
+                viewModel.Turns--
+            }
+            else if (viewModel.hintTries == 1){
+
+                viewModel.hintTries++
+
+                viewModel.Turns--
+            }
+            else if(viewModel.hintTries == 2){
+
+                viewModel.hintTries++
+
+                viewModel.Turns--
+            }
+        }
         startGame.setOnClickListener{
             viewModel.startNewGame()
             viewModel.ButtonVisibility = true
+            viewModel.hintTries = 0
             if(viewModel.ButtonVisibility){
                 enableButtons()
             }
+            viewModel.Turns += maxTries
             viewModel.generateBlankSets(viewModel.wordToGuess)
 
             underscoreWords.text = viewModel.underscoreWords
@@ -214,6 +242,10 @@ class MainActivity2 : AppCompatActivity() {
     }
     private fun addLetter(letter:Char){
         viewModel.usedLetter.add(letter)
+        viewModel.Turns--
+
+        viewModel.disableWords+=letter
+        checkDisableLetters(letter)
 
 //        Toast.makeText(this,"Size: ${viewModel.usedLetter.size}",Toast.LENGTH_LONG).show()
         viewModel.generateLettersUsed(viewModel.usedLetter)
@@ -277,6 +309,13 @@ class MainActivity2 : AppCompatActivity() {
         {
             Toast.makeText(this,"Current Tries :${viewModel.currentTries}",Toast.LENGTH_LONG).show()
             viewModel.currentTries++
+            if(viewModel.Turns<0){
+                Toast.makeText(this,"You lost the game. Please try again",Toast.LENGTH_LONG).show()
+                viewModel.ButtonVisibility = false
+                if(!viewModel.ButtonVisibility){
+                    disableButtons()
+                }
+            }
             if(viewModel.currentTries > maxTries){
                 Toast.makeText(this,"You lost the game. Please try again",Toast.LENGTH_LONG).show()
                 viewModel.ButtonVisibility = false
@@ -288,7 +327,36 @@ class MainActivity2 : AppCompatActivity() {
 
 
     }
-
+    private fun checkDisableLetters(letter:Char){
+        when (letter.toLowerCase()) {
+            'a' -> keyA.isEnabled = false
+            'b' -> keyB.isEnabled = false
+            'c' -> keyC.isEnabled = false
+            'd' -> keyD.isEnabled = false
+            'e' -> keyE.isEnabled = false
+            'f' -> keyF.isEnabled = false
+            'g' -> keyG.isEnabled = false
+            'h' -> keyH.isEnabled = false
+            'i' -> keyI.isEnabled = false
+            'j' -> keyJ.isEnabled = false
+            'k' -> keyK.isEnabled = false
+            'l' -> keyL.isEnabled = false
+            'm' -> keyM.isEnabled = false
+            'n' -> keyN.isEnabled = false
+            'o' -> keyO.isEnabled = false
+            'p' -> keyP.isEnabled = false
+            'q' -> keyQ.isEnabled = false
+            'r' -> keyR.isEnabled = false
+            's' -> keyS.isEnabled = false
+            't' -> keyT.isEnabled = false
+            'u' -> keyU.isEnabled = false
+            'v' -> keyV.isEnabled = false
+            'w' -> keyW.isEnabled = false
+            'x' -> keyX.isEnabled = false
+            'y' -> keyY.isEnabled = false
+            'z' -> keyZ.isEnabled = false
+        }
+    }
     private fun enableButtons(){
         keyA.isEnabled = true
         keyB.isEnabled = true
