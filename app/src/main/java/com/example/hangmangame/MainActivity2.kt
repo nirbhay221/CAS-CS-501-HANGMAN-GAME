@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -13,7 +14,7 @@ import kotlin.text.StringBuilder
 class MainActivity2 : AppCompatActivity() {
 
     private val viewModel by viewModels<viewModelState>()
-    private val maxTries = 3
+    private val maxTries = 7
     private lateinit var blankWords:String
 
     private lateinit var keyA: Button
@@ -47,6 +48,7 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var startGame : Button
     private var hintButton : Button ?= null
     private var hintResult : TextView ?= null
+    private lateinit var imageCheck : ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +91,43 @@ class MainActivity2 : AppCompatActivity() {
         wordsUsed = findViewById(R.id.wordsUsed)
         hintButton = findViewById(R.id.hintButton)
         hintResult  = findViewById(R.id.hintResult)
+        imageCheck = findViewById(R.id.imageView2)
+//        Toast.makeText(this,"${viewModel.currentTries}",Toast.LENGTH_LONG).show()
+        if(viewModel.currentTries == 0) {
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 1) {
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 2) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 3) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 4) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 5) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 6) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 7) {
+
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+        else if(viewModel.currentTries == 8) {
+//            Toast.makeText(this,"Enters here",Toast.LENGTH_LONG).show()
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+        }
+
         if(viewModel.hintTries == 1||viewModel.hintTries == 2||viewModel.hintTries == 3){
 
             hintResult?.text = viewModel.wordCategoriesMap[viewModel.wordToGuess]
@@ -107,12 +146,12 @@ class MainActivity2 : AppCompatActivity() {
             disableButtons()
         }
         checkLetter()
-        Toast.makeText(this,"Recreation",Toast.LENGTH_LONG).show()
+//        Toast.makeText(this,"Recreation",Toast.LENGTH_LONG).show()
         for(element in viewModel.disableWords){
             checkDisableLetters(element)
         }
         hintButton?.setOnClickListener {
-            Toast.makeText(this,"Entering Hint ",Toast.LENGTH_LONG).show()
+//            Toast.makeText(this,"Entering Hint ",Toast.LENGTH_LONG).show()
 
             if(viewModel.hintTries == 0){
 
@@ -134,6 +173,13 @@ class MainActivity2 : AppCompatActivity() {
 
                 viewModel.Turns--
             }
+            else if(viewModel.hintTries == 3){
+                Toast.makeText(this,"Hint Not Available: You lost the game. Please try again",Toast.LENGTH_LONG).show()
+                viewModel.ButtonVisibility = false
+                if(!viewModel.ButtonVisibility){
+                    disableButtons()
+                }
+            }
         }
         startGame.setOnClickListener{
             viewModel.startNewGame()
@@ -148,7 +194,7 @@ class MainActivity2 : AppCompatActivity() {
             underscoreWords.text = viewModel.underscoreWords
 
             viewModel.generateLettersUsed(viewModel.usedLetter)
-
+            imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
             wordsUsed.text = viewModel.wordsUsed
             checkLetter()
         }
@@ -188,7 +234,7 @@ class MainActivity2 : AppCompatActivity() {
         val remainingLetters = getRemainingLetters()
         val remainingVowels = vowels.filter { remainingLetters.contains(it) }
 
-        Toast.makeText(this,"Remaining Vowels:${remainingVowels}",Toast.LENGTH_LONG).show()
+//        Toast.makeText(this,"Remaining Vowels:${remainingVowels}",Toast.LENGTH_LONG).show()
         var foundVowelInWordToGuess = false
 
         for (char in wordToGuess) {
@@ -197,7 +243,7 @@ class MainActivity2 : AppCompatActivity() {
                 break
             }
         }
-        Toast.makeText(this,"FoundVowel:${foundVowelInWordToGuess}",Toast.LENGTH_LONG).show()
+//        Toast.makeText(this,"FoundVowel:${foundVowelInWordToGuess}",Toast.LENGTH_LONG).show()
 
         if (!foundVowelInWordToGuess) {
             for (letter in remainingVowels) {
@@ -396,8 +442,43 @@ class MainActivity2 : AppCompatActivity() {
         }
         else
         {
-            Toast.makeText(this,"Current Tries :${viewModel.currentTries}",Toast.LENGTH_LONG).show()
+//            Toast.makeText(this,"Current Tries :${viewModel.currentTries}",Toast.LENGTH_LONG).show()
+
             viewModel.currentTries++
+            if(viewModel.currentTries == 0) {
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 1) {
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 2) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 3) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 4) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 5) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 6) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 7) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
+            else if(viewModel.currentTries == 8) {
+
+                imageCheck.setImageResource(viewModel.imageCategory[viewModel.currentTries])
+            }
             if(viewModel.Turns<0){
                 Toast.makeText(this,"You lost the game. Please try again",Toast.LENGTH_LONG).show()
                 viewModel.ButtonVisibility = false
@@ -474,6 +555,7 @@ class MainActivity2 : AppCompatActivity() {
         keyX.isEnabled = true
         keyY.isEnabled = true
         keyZ.isEnabled = true
+        hintButton?.isEnabled = true
 
     }
     private fun disableButtons(){
@@ -503,6 +585,7 @@ class MainActivity2 : AppCompatActivity() {
         keyX.isEnabled = false
         keyY.isEnabled = false
         keyZ.isEnabled = false
+        hintButton?.isEnabled=false
     }
 
 }

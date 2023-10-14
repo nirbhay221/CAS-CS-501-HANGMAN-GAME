@@ -22,6 +22,7 @@ const val CURRENT_HINTTRIES_KEY = "CURRENT_HINTTRIES_KEY"
 const val CURRENT_DISABLEWORDS_KEY = "CURRENT_DISABLEWORDS_KEY"
 const val CURRENT_TURN_KEY = "CURRENT_TURN_KEY"
 
+
 class viewModelState (private val savedStateHandle: SavedStateHandle):ViewModel() {
     var wordToGuess: String
         get() = savedStateHandle.get(CURRENT_WORDTOGUESS_KEY) ?: ""
@@ -82,6 +83,18 @@ class viewModelState (private val savedStateHandle: SavedStateHandle):ViewModel(
     val wordCategoriesMap = mapOf(
 
         "apple" to "Fruit",
+    )
+
+    var imageCategory = arrayOf(
+        R.drawable.part0,
+        R.drawable.part1,
+        R.drawable.part2,
+        R.drawable.part3,
+        R.drawable.part4,
+        R.drawable.part5,
+        R.drawable.part6,
+        R.drawable.part7,
+        R.drawable.part8,
     )
     fun generateBlankSets(word: String){
         val blankRepresentation = StringBuilder()

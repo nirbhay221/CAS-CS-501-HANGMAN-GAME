@@ -326,4 +326,17 @@
         app:layout_constraintStart_toStartOf="@id/hintButton"
         app:layout_constraintTop_toTopOf="@id/hintButton"
         />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="176dp"
+        android:layout_height="178dp"
+        app:srcCompat="@drawable/part0"
+        tools:layout_editor_absoluteX="473dp"
+        tools:layout_editor_absoluteY="48dp"
+        android:layout_marginLeft="460sp"
+        android:layout_marginBottom="150sp"
+        app:layout_constraintStart_toStartOf="@id/constraintLayout"
+        app:layout_constraintTop_toTopOf="@id/constraintLayout"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
