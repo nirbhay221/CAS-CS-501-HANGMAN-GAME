@@ -394,7 +394,7 @@ class MainActivity2 : AppCompatActivity() {
             if(viewModel.wordToGuess[i].equals(letter, ignoreCase =true) && !viewModel.revealedLetter.contains(viewModel.wordToGuess[i])){
                 viewModel.revealedLetter.add(viewModel.wordToGuess[i])
                 letterFound = true
-//                Toast.makeText(this,"Guess word : ${viewModel.wordToGuess} , ${viewModel.wordToGuess[i]} FOUND !!!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"${viewModel.wordToGuess[i]} FOUND !!!", Toast.LENGTH_LONG).show()
             }
 
         }
