@@ -81,8 +81,43 @@ class viewModelState (private val savedStateHandle: SavedStateHandle):ViewModel(
         set(value) = savedStateHandle.set(CURRENT_UPDATEDWORDS_KEY, value)
 
     val wordCategoriesMap = mapOf(
-
         "apple" to "Fruit",
+        "banana" to "Fruit",
+        "cherry" to "Fruit",
+        "date" to "Fruit",
+        "elderberry" to "Fruit",
+        "blueberry" to "Fruit",
+        "pineapple" to "Fruit",
+        "watermelon" to "Fruit",
+        "raspberry" to "Fruit",
+        "elephant" to "Animal",
+        "lion" to "Animal",
+        "penguin" to "Animal",
+        "dolphin" to "Animal",
+        "india" to "Country",
+        "australia" to "Country",
+        "canada" to "Country",
+        "japan" to "Country",
+        "brazil" to "Country",
+        "germany" to "Country",
+        "baseball" to "Sports",
+        "tennis" to "Sports",
+        "swimming" to "Sports",
+        "soccer" to "Sports",
+        "volleyball" to "Sports",
+        "mercury" to "Planets",
+        "venus" to "Planets",
+        "earth" to "Planets",
+        "mars" to "Planets",
+        "jupiter" to "Planets",
+        "neptune" to "Planets",
+        "saturn" to "Planets",
+        "uranus" to "Planets",
+        "engineer" to "Profession",
+        "musician" to "Profession",
+        "astronaut" to "Profession",
+        "doctor" to "Profession",
+        "chef" to "Profession"
     )
 
     var imageCategory = arrayOf(
