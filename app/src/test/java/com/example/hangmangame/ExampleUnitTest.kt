@@ -1,17 +1,43 @@
 package com.example.hangmangame
 
+import androidx.lifecycle.SavedStateHandle
+import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+
+    private lateinit var viewModel: viewModelState
+
+    @Before
+    fun setup() {
+        val savedStateHandle = SavedStateHandle()
+        viewModel = viewModelState(savedStateHandle)
     }
+
+    @Test
+    fun testGameStart() {
+        viewModel.startNewGame()
+        assertEquals("apple", viewModel.wordToGuess)
+        assertFalse(viewModel.winningCondition)
+        assertEquals("_____", viewModel.underscoreWords)
+        assertEquals(5, viewModel.Turns)
+    }
+
+    @Test
+    fun testLetterSelectionWithIncorrectLetter() {
+
+        viewModel.ButtonVisibility = true
+
+        viewModel.wordToGuess = "apple"
+        viewModel.generateBlankSets(viewModel.wordToGuess)
+
+        viewModel.usedLetter.add('x')
+        viewModel.Turns--
+        viewModel.ButtonVisibility = false
+
+        assertFalse(viewModel.ButtonVisibility)
+    }
+
 }
